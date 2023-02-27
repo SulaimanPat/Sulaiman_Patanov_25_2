@@ -1,5 +1,6 @@
-from django.shortcuts import HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect
 from datetime import datetime
+from posts.models import Product
 
 # Create your views here.
 
@@ -19,3 +20,17 @@ def goodby(request):
 def youtube_view(request):
     if request.method=="GET":
         return redirect("https://www.youtube.com/")
+
+def main_page_view(request):
+    if request.method == "GET":
+        return render(request, 'layouts/index.html')
+
+def products_view(request):
+    if request.method == "GET":
+        products = Product.objects.all()
+
+        context = {
+            'products': products
+        }
+        return render(request, 'products/products.html', context=context)
+
