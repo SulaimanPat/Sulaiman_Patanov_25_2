@@ -30,7 +30,24 @@ def products_view(request):
         products = Product.objects.all()
 
         context = {
-            'products': products
+            'products': [
+                {
+                    'id': product.id,
+                    'title': product.title,
+                    'rate': product.rate,
+                    'image': product.image,
+                    'hashtags': product.hashtags.all()
+                }
+                for product in products
+            ]
         }
         return render(request, 'products/products.html', context=context)
+def post_detail_view(request, id):
+    if request.method == "GET":
+        post = Product.objects.get(id=id)
 
+        context = {
+            'post': post,
+            'comments': post.comments.all()
+        }
+        return render(request, 'products/detail.html', context=context)
