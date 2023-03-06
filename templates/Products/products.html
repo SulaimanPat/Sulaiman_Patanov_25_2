@@ -1,30 +1,41 @@
 {% extends 'layouts/index.html' %}
 {% load static %}
+
 {% block head %}
     <link rel="stylesheet" href="{% static 'products.css' %}">
 {% endblock %}
 
 {% block content %}
-
+    <form action="/products/" method="get">
+        <input type="text" name="search">
+        <input type="submit" value="Search">
+    </form>
     <div class="products">
         {% for product in products %}
             <div class="product_block">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         {% if product.image %}
-                            <img class="post_image" src="/media/{{ product.image }}" alt="">
+                            <img class="product_image" src="/media/{{ product.image }}" alt="">
                         {% else %}
-                            <img class="post_image" src="{% static 'img.png' %}" alt="">
+                            <img class="product_image" src="{% static 'img.png' %}" alt="">
                         {% endif %}
                         <h5 class="card-title">{{ product.title }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Rate: {{ product.rate }}</h6>
-                        {% for hastag in product.hastags %}
-                            <p>{{ hastag.title }}</p>
+                        {% for hashtag in product.hashtags %}
+                            <p>{{ hashtag.title }}</p>
                         {% endfor %}
                         <a href="/products/{{ product.id }}" class="card-link">More</a>
                     </div>
                 </div>
             </div>
+        {% endfor %}
+    </div>
+    <div class="pages">
+        {% for page in pages %}
+            <a href="/products/?page={{ page }}">
+                <button class="page_button">{{ page }}</button>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}
