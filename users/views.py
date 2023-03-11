@@ -2,17 +2,18 @@ from django.shortcuts import render, redirect
 from users.usersForms import RegisterForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.views.generic import ListView, CreateView, DeleteView, DetailView
 
 # Create your views here.
 
-def register_view(request):
-    if request.method == "GET":
+class RegisterSBV(ListView, CreateView):
+    template_name = 'users/register.html'
+    def get(self, request,*args, **kwargs):
         context = {
             'form': RegisterForm
         }
-        return render(request, 'users/register.html', context=context)
-
-    if request.method == 'POST':
+        return render(request, self.template_name, context=context)
+    def post(self, request, **kwargs):
         data = request.POST
         form = RegisterForm(data=data)
 
@@ -25,19 +26,19 @@ def register_view(request):
                 return redirect('/users/login/')
             else:
                 form.add_error('password1', 'Пароли не совпадают')
-        return render(request, 'users/register.html', context={
+        return render(request, self.template_name, context={
             'form': form
         })
 
-def login_view(request):
-    if request.method=="GET":
+class loginSBV(ListView, CreateView):
+    template_name = "users/login.html"
+    def get(self, request, *args, **kwargs):
         context = {
             'form': LoginForm
         }
 
-        return render(request, "users/login.html", context=context)
-
-    if request.method == "POST":
+        return render(request, self.template_name, context=context)
+    def post(self, request, **kwargs):
         data = request.POST
         form = LoginForm(data=data)
 
@@ -56,10 +57,9 @@ def login_view(request):
             else:
                 form.add_error("username", "Пользователь не найден!")
 
-        return render(request, 'users/login.html', context={
+        return render(request, self.template_name, context={
             "form": form
         })
-
 
 def logout_view(request):
     logout(request)
